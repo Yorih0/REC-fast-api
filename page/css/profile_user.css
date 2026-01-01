@@ -1,0 +1,170 @@
+/* ===== GLOBAL ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    background-color: #040404;
+    color: #ffffff;
+    line-height: 1.4;
+    overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+
+header {
+    padding: 25px 40px;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ===== PROFILE CARD ===== */
+
+.profile {
+    max-width: 600px;
+    margin: 80px auto 50px;
+    padding: 35px 40px;
+    border-radius: 12px;
+
+    background: linear-gradient(#ffffff14, #ffffff05);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 25px 35px rgba(0,0,0,0.6);
+}
+
+.profile h2 {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.profile p {
+    font-size: 17px;
+    margin: 12px 0;
+    color: #d0d0d0;
+}
+
+.profile strong {
+    color: #ffffff;
+}
+
+/* ===== ORDERS GRID ===== */
+
+#ContenerForOrders {
+    max-width: 1200px;
+    margin: 0 auto 100px;
+    padding: 20px 40px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* ===== ORDER CARD ===== */
+
+#ContenerForOrders > div {
+    position: relative;
+    padding: 26px 26px 30px;
+    border-radius: 14px;
+
+    background: linear-gradient(#ffffff18, #ffffff05);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+
+    box-shadow: 0 25px 30px rgba(0,0,0,0.6);
+    transition: 0.35s ease;
+}
+
+#ContenerForOrders > div:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 40px 45px rgba(0,0,0,0.8);
+}
+
+/* Order badge */
+#ContenerForOrders > div::before {
+    content: attr(id);
+    position: absolute;
+    top: -14px;
+    right: 18px;
+    background: #ffffff;
+    color: #000;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ===== ORDER FIELDS ===== */
+
+div_brand {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+div_model,
+div_license_plate,
+div_region,
+div_description_problem,
+div_status,
+div_worker_id,
+div_description_work {
+    display: block;
+    font-size: 14px;
+    margin: 6px 0;
+    color: #cfcfcf;
+}
+
+/* Labels */
+
+div_model::before { content: "🚗 Модель: "; font-weight: 700; color:#fff; }
+div_license_plate::before { content: "🔢 Номер: "; font-weight: 700; color:#fff; }
+div_region::before { content: "🌍 Регион: "; font-weight: 700; color:#fff; }
+div_description_problem::before { content: "⚠️ Проблема: "; font-weight: 700; color:#fff; }
+div_status::before { content: "📌 Статус: "; font-weight: 700; color:#fff; }
+div_worker_id::before { content: "👨‍🔧 Мастер: "; font-weight: 700; color:#fff; }
+div_description_work::before { content: "🛠 Выполнено: "; font-weight: 700; color:#fff; }
+
+/* ===== STATUS BADGE ===== */
+
+div_status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    font-weight: 700;
+}
+#btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    font-weight: 700;
+}
+/* ===== MOBILE ===== */
+
+@media (max-width: 768px) {
+    .profile {
+        margin: 50px 20px;
+        padding: 30px 24px;
+    }
+
+    #ContenerForOrders {
+        padding: 10px 20px 60px;
+    }
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReCharge — Создаем заявку</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/toast.css">
+  <link rel="stylesheet" href="css/order.css">
+</head>
+<body>
+  <div class="hero">
+    <header class="top-bar">
+      <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+    </header>
+
+    <main class="content">
+      <div class="copy">
+        <p class="eyebrow">ТППО</p>
+        <h1>
+          Создаем<br />
+          Заявку
+        </h1>
+        <a class="ghost-button" href="#app-form">Поехали</a>
+      </div>
+      <div class="visual">
+        <img src="png/list.png" alt="Документ" class="list-image">
+      </div>
+    </main>
+  </div>
+
+  <section id="app-form" class="app-order-section">
+    <div class="app-order-wrapper">
+      <div class="app-order-box">
+        <h1 class="app-order-title">Новый заказ</h1>
+
+        <form id="orderForm" class="app-order-form" onsubmit="return Order_Form(event)">
+          <div class="app-order-group">
+            <label>Марка электромобиля</label>
+            <input type="text" name="brand" id="brand" placeholder="Opel" required>
+          </div>
+
+          <div class="app-order-group">
+            <label>Модель</label>
+            <input type="text" name="model" id="model" placeholder="Corsa-e" required>
+          </div>
+
+          <div class="app-order-group">
+            <label>Номерной знак (РБ)</label>
+            <div class="plate">
+              <input
+                type="text"
+                name="plate_main"
+                id="plate_main"
+                placeholder="1234AB"
+                maxlength="6"
+                pattern="(?:E\d{3}|\d{4})[A-Z]{2}"
+                required
+              >
+
+              <span class="dash">-</span>
+
+              <select name="plate_region" id="plate_region" required>
+                <option value="">Регион</option>
+                <option value="0">0 Военные</option>
+                <option value="1">1 Брест</option>
+                <option value="2">2 Витебск</option>
+                <option value="3">3 Гомель</option>
+                <option value="4">4 Гродно</option>
+                <option value="5">5 Минск обл.</option>
+                <option value="6">6 Могилёв</option>
+                <option value="7">7 Минск</option>
+                <option value="8">8 Минск</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="app-order-group">
+            <label>Тип неисправности</label>
+            <select name="problem" id="problem">
+              <option value="Диагностика">Диагностика</option>
+              <option value="Батарея">Батарея</option>
+              <option value="Электродвигатель">Электродвигатель</option>
+              <option value="Зарядная система">Зарядная система</option>
+              <option value="Программное обеспечение">Программное обеспечение</option>
+              <option value="Другое">Другое</option>
+            </select>
+          </div>
+
+          <div class="app-order-group">
+            <label>Описание проблемы</label>
+            <textarea
+              name="description"
+              id="description"
+              rows="4"
+              placeholder="Опишите симптомы неисправности"
+            ></textarea>
+          </div>
+
+          <div class="app-order-button">
+            <button type="submit" class="app-order-circle-btn">
+              <svg class="app-order-arrow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 4l8 8-8 8" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-line"></div>
+    <div class="footer-content">
+        <div class="footer-phone">+3752945674893</div>
+        <div class="footer-copyright">ReCharge 2025 ©</div>
+        <div class="footer-email">Recharge@gmail.com</div>
+    </div>
+  </footer>
+  <script src="js/General.js"></script>
+<script>
+async function Order_Form(event) 
+{
+  event.preventDefault();
+  const formData = {
+      hashkey: getCookie('hashkey'), 
+      brand: document.getElementById('brand').value,
+      model: document.getElementById('model').value,
+      license_plate: document.getElementById('plate_main').value,
+      region: document.getElementById('plate_region').value,
+      problem: document.getElementById('problem').value,
+      description_problem: document.getElementById('description').value
+  };
+  if (!formData.hashkey) 
+  {
+      showToast("Пользователь не авторизован", "error");
+      return false;
+  }
+  try 
+  {
+    const response = await fetch('/Order', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+      },body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+    if (response.ok) 
+    {
+        showToast(result.message, "success");
+        setTimeout(() => { window.location.href = "/profile"; }, 500);
+    } 
+    else 
+    {
+        showToast(result.message, "error");
+    }
+  }
+  catch (err)
+  {
+      showToast("Ошибка сети", "error");
+  }
+  return false;
+}
+</script>
+</body>
+</html>

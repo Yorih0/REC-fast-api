@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReCharge</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/toast.css">
+</head>
+<body>
+  <div class="stars-container"></div>
+  
+    <header>
+        <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+    </header>
+
+<div class="wrapper">
+<div class="gradient-box">
+  <div class="box-title">Вход</div>
+  <form id="loginForm" onsubmit="return Entry_Form(event)">
+
+  <div class="form-group">
+    <label for="login">Логин</label>
+    <input type="text" id="login" name="login" required>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Пароль</label>
+    <input type="password" id="password" name="password" required>
+  </div>
+
+  <div class="login-button">
+    <button class="circle-btn" type="submit" name="action" value="login">
+      <svg class="arrow-icon" viewBox="0 0 24 24">
+        <path d="M8 4l8 8-8 8" />
+      </svg>
+    </button>
+    <div class="box-title-no-acc">Нет аккаунта?</div>
+    <a class="box-title-go-acc" onclick="Register()">Зарегистрироваться</a>
+  </div>
+  
+
+  </form>
+  </div>
+</div>
+</div>
+<footer class="footer">
+  <div class="footer-line"></div>
+  <div class="footer-content">
+      <div class="footer-phone">+3752945674893</div>
+      <div class="footer-copyright">ReCharge 2025 ©</div>
+      <div class="footer-email">Recharge@gmail.com</div>
+  </div>
+</footer>
+<script src = "js/General.js"></script>
+<script>
+async function Profile() 
+{
+    const formData = {
+        hashkey: getCookie('hashkey'),
+    };
+    try 
+    {
+        const response = await fetch('/Profile', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        },body: JSON.stringify(formData)
+        });
+        const result = await response.json();
+        if (response.ok) 
+        {
+            switch(result.type)
+            {
+                case "Customer":
+                {
+                    window.location.href = "/profile_user";
+                    break;
+                }
+                case "Worker":
+                {
+                    window.location.href = "/profile_worker";
+                    break;
+                }
+                case "Admin":
+                {
+                    window.location.href = "/profile_admin";
+                    break;
+                }
+            }
+        }
+        else 
+        {
+            showToast(result.message, "error");
+        }
+    }
+    catch (err)
+    {
+            showToast("Ошибка сети", "error");
+    }
+    return false;
+}
+async function Entry_Form(event) 
+{
+  event.preventDefault();
+  const formData = {
+    login: document.getElementById('login').value,
+    password: document.getElementById('password').value
+  };
+  try 
+  {
+    const response = await fetch('/Login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+    console.log("Ответ:", result);
+
+    if (response.ok) 
+    {
+      showToast(result.message, "success");
+      setCookie(result.hashkey)
+      setTimeout(() => { Profile() }, 500);
+    }
+    else 
+    {
+      showToast(result.message, "error");
+    }
+  } 
+  catch (err) 
+  {
+    showToast("Ошибка сети", "error");
+  }
+  return false;
+}
+function Register() 
+{
+  window.location.href = "/register";
+}
+</script>
+
+<script>
+// Создание анимированных звездочек
+function createStar() {
+  const container = document.querySelector('.stars-container');
+  const star = document.createElement('div');
+  star.className = 'star';
+  
+  // Случайная позиция
+  const x = Math.random() * window.innerWidth;
+  const y = Math.random() * window.innerHeight;
+  
+  star.style.left = x + 'px';
+  star.style.top = y + 'px';
+  
+  container.appendChild(star);
+  
+  // Удаляем звездочку после анимации
+  setTimeout(() => {
+    star.remove();
+  }, 2000);
+}
+
+// Создаем звездочки периодически
+setInterval(() => {
+  createStar();
+}, 800);
+
+// Создаем несколько звездочек сразу
+for (let i = 0; i < 5; i++) {
+  setTimeout(() => createStar(), i * 200);
+}
+</script>
+
+</body>
+</html> 

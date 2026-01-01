@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/profile_user.css">
+    <link rel="apple-touch-icon" href="png/pes.png">
+</head>
+<body>
+    <header>
+        <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+    </header>
+    <div class="profile">
+        <h2 id="login">Загрузка...</h2>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Phone:</strong> <span id="phone"></span></p>
+        <p><strong>Role:</strong> <span id="role"></span></p>
+    </div>
+    <div id = "ContenerForOrders"></div>
+    <script src="js/General.js"></script>
+    <script>
+        const formData = { hashkey: getCookie('hashkey'),};
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            if (!formData.hashkey) 
+            {
+                showToast("Пользователь не авторизован", "error");
+                return;
+            }
+            try 
+            {
+                const response = await fetch("/load_profile_user",{
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                if (!response.ok) 
+                {
+                    showToast(data.message || "Ошибка загрузки профиля", "error");
+                    return;
+                }
+                document.getElementById("login").textContent = data.login;
+                document.getElementById("email").textContent = data.email;
+                document.getElementById("phone").textContent = data.phone;
+                document.getElementById("role").textContent = data.role;
+                if(data.count > 0)
+                {
+                    console.log(data);  
+                    CreatorDivs(data.count,"ContenerForOrders",data.orders)
+                }
+
+            } 
+            catch (error) 
+            { showToast("Ошибка соединения с сервером", "error");}
+        });
+        function CreatorDivs(n,where,orders)
+        {
+            try
+            {
+                const container = document.getElementById(where)
+                for (let i = 1; i <= n;i++)
+                {
+                    order = orders[`order-${i}`];
+                    const div = document.createElement("div");
+                    div.id = `Заказ ${i}`;
+                    
+                    const div_brand = document.createElement("div_brand");
+                    div_brand.textContent = `${order.model}`;
+                    div.appendChild(div_brand)
+
+                    const div_model = document.createElement("div_model");
+                    div_model.textContent = `${order.model}`;
+                    div.appendChild(div_model)
+
+                    const div_license_plate = document.createElement("div_license_plate");
+                    div_license_plate.textContent = `${order.license_plate}`;
+                    div.appendChild(div_license_plate)
+
+                    const div_region = document.createElement("div_region");
+                    div_region.textContent = `${order.region}`;
+                    div.appendChild(div_region)
+
+                    const div_description_problem = document.createElement("div_description_problem");
+                    div_description_problem.textContent = `${order.description_problem}`;
+                    div.appendChild(div_description_problem)
+                    
+                    const div_status = document.createElement("div_status");
+                    div_status.textContent = `${order.status}`;
+                    div.appendChild(div_status)
+
+                    const div_worker_id = document.createElement("div_worker_id");
+                    div_worker_id.textContent = `${order.worker_id}`;
+                    div.appendChild(div_worker_id)
+
+                    const div_description_work = document.createElement("div_description_work");
+                    div_description_work.textContent = `${order.dediv_description_work}`;
+                    div.appendChild(div_description_work)
+
+                    const button = document.createElement("button");
+                    button.textContent = "Отмена";
+                    button.id = "btn"
+                    button.type = "button"
+                    button.onclick = cancel
+                    div.appendChild(button)
+
+                    container.appendChild(div)
+                }
+            }
+            catch(error)
+            {
+                showToast(error,"error")
+                console.log(error)
+            }
+        }
+        async function cancel() 
+        {
+              const formData = {
+                hashkey: getCookie('hashkey'), 
+                
+            };
+            try 
+            {
+                const response = await fetch('/Profile', {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+                },body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                if (response.ok) 
+                {
+                    showToast(result.message, "success");
+                    // setTimeout(() => { window.location.href = "/profile"; }, 500);
+                } 
+                else 
+                {
+                    showToast(result.message, "error");
+                }
+            }
+            catch (err)
+            {
+                showToast("Ошибка сети", "error");
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

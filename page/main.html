@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>ReCharge - Ремонт электромобилей</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="css/main.css">
+		<link rel = "stylesheet" href="css/toast.css">
+</head>
+<body>
+	<main class="main-container">
+		<header class="header">
+			<div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+			<nav class="nav">
+					<div id="Choose_Enter_or_Login"></div>
+					<div id="btn_exit"></div>
+			</nav>
+		</header>
+
+		<section class="hero">
+			<div class="hero-content">
+				<div class="hero-text">
+						<h1 class="hero-title">Ваше авто <br><span class="hero-title-no-wrap">в надёжных руках</span></h1>
+					<p class="hero-subtitle">От планового обслуживания <br>до модернизации</p>
+					<div class="hero-buttons">
+						<button class="hero-btn-light" onclick="createOrder()">Записаться</button>
+						<button class="hero-btn-dark" onclick="scrollToServices()">Услуги</button>
+					</div>
+				</div>
+			</div>
+		</section>
+					<div class="zag1">
+				Что мы делаем
+			</div>
+
+		<section class="stats">
+			<div class="stats-container">
+				<div class="stat-item">
+					<div class="stat-number" data-target="12" data-suffix="K">0</div>
+					<div class="stat-label">Обслуженных автомобилей</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number" data-target="15" data-suffix=" лет">0</div>
+					<div class="stat-label">Облуживания ваших авто</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number" data-target="98" data-suffix="%">0</div>
+					<div class="stat-label">Клиентов возвращаются снова</div>
+				</div>
+			</div>
+			<div class="stats-description">
+				Мы обслуживаем и ремонтируем электромобили любой марки. От диагностики до сложных технических работ — всё под ключ, с гарантией и гибким графиком.
+			</div>
+			<div class="zag2">
+				Популярные Услуги
+			</div>
+<div class="container">
+	<div data-text="Тормозной диск" style="--r:-15;" class="glass">
+		<img src="png/disk.png" alt="Github" style="width: 310px; height: 310px;">
+	</div>
+	<div data-text="Батарея" style="--r:5;" class="glass">
+		<img src="png/battery.png" alt="Code" style="width: 310px; height: 310px;">
+	</div>
+	<div data-text="Система охлаждения" style="--r:25;" class="glass">
+		<img src="png/hla.png" alt="Earn" style="width: 310px; height: 310px;">
+	</div>
+</div>
+
+
+		</section>
+
+					<footer class="footer">
+						<div class="footer-line"></div>
+						<div class="footer-content">
+								<div class="footer-phone">+3752945674893</div>
+								<div class="footer-copyright">ReCharge 2025 ©</div>
+								<div class="footer-email">Recharge@gmail.com</div>
+						</div>
+				</footer>
+	</main>
+<script src = "js/General.js"></script>
+<script>
+	function scrollToServices()
+		{
+			const servicesSection = document.querySelector('.services');
+			if (servicesSection) {
+				servicesSection.scrollIntoView({ behavior: 'smooth' });
+			}
+		}
+
+		function animateCounters() {
+			const counters = document.querySelectorAll('.stat-number');
+			
+			counters.forEach(counter => {
+				const target = parseFloat(counter.getAttribute('data-target'));
+				const prefix = counter.getAttribute('data-prefix') || '';
+				const suffix = counter.getAttribute('data-suffix') || '';
+				const duration = 3000; // 3 секунды
+				const startTime = performance.now();
+				const startValue = 0;
+				
+				function updateCounter(currentTime) {
+					const elapsed = currentTime - startTime;
+					const progress = Math.min(elapsed / duration, 1);
+					
+					// Easing функция для постепенного замедления (ease-out)
+					const easeOut = 1 - Math.pow(1 - progress, 3);
+					const currentValue = startValue + (target - startValue) * easeOut;
+					
+					// Форматирование числа
+					let displayValue;
+					if (suffix.includes('K')) {
+						// Для K просто округляем до целого
+						displayValue = Math.floor(currentValue);
+					} else if (suffix.includes('%')) {
+						// Для процентов округляем до целого
+						displayValue = Math.floor(currentValue);
+					} else {
+						// Для обычных чисел
+						displayValue = Math.floor(currentValue);
+					}
+					
+					counter.textContent = prefix + displayValue + suffix;
+					
+					if (progress < 1) {
+						requestAnimationFrame(updateCounter);
+					} else {
+						// Финальное значение
+						let finalValue;
+						if (suffix.includes('K')) {
+							finalValue = Math.floor(target);
+						} else if (suffix.includes('%')) {
+							finalValue = Math.floor(target);
+						} else {
+							finalValue = Math.floor(target);
+						}
+						counter.textContent = prefix + finalValue + suffix;
+					}
+				}
+				
+				// Запуск анимации с небольшой задержкой для эффекта появления
+				setTimeout(() => {
+					requestAnimationFrame(updateCounter);
+				}, 200);
+			});
+		}
+</script>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		View_btns();
+		animateCounters();
+	});
+
+	function Enter() 
+	{
+		window.location.href = "/login";
+	}
+	function createOrder() 
+	{
+		if (!hasHashkeyCookie()) 
+		{
+			window.location.href = "/login";
+		}
+		else
+		{
+				window.location.href = "/order";
+		}
+		
+	}
+	function Exit()
+	{
+		document.cookie = "hashkey=; path=/; max-age=0";
+		showToast("Вы вышли из аккаунта","info")
+		View_btns();
+		
+	}
+	async function Profile() 
+	{
+		const formData = {
+			hashkey: getCookie('hashkey'),
+		};
+		try 
+		{
+			const response = await fetch('/Profile', {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json',
+			'Accept': 'application/json'
+			},body: JSON.stringify(formData)
+			});
+			const result = await response.json();
+			if (response.ok) 
+			{
+				switch(result.type)
+				{
+					case "Customer":
+					{
+						window.location.href = "/profile_user";
+						break;
+					}
+					case "Worker":
+					{
+						window.location.href = "/profile_worker";
+						break;
+					}
+					case "Admin":
+					{
+						window.location.href = "/profile_admin";
+						break;
+					}
+				}
+			}
+			else 
+			{
+				showToast(result.message, "error");
+			}
+		}
+		catch (err)
+		{
+				showToast("Ошибка сети", "error");
+		}
+		return false;
+	}
+	function View_btns()
+	{
+		const Choose_Enter_or_Login = document.getElementById("Choose_Enter_or_Login");
+		Choose_Enter_or_Login.innerHTML = "";
+		const bnt_exit = document.getElementById("btn_exit");
+		bnt_exit.innerHTML = ""
+
+		if (hasHashkeyCookie()) 
+		{
+			// showToast("Авто вход","success");
+			const profileBtn = document.createElement("button");
+			profileBtn.type = "button";
+			profileBtn.className = "cta-btn";
+			profileBtn.textContent = "Профиль";
+			profileBtn.onclick = Profile;
+			Choose_Enter_or_Login.appendChild(profileBtn);
+
+			const bnt_exit_block = document.getElementById("btn_exit");
+			bnt_exit_block.innerHTML = "";
+			const bnt_exit = document.createElement("button");
+			bnt_exit.type = "button";
+			bnt_exit.className = "login-btn";
+			bnt_exit.textContent = "Выйти";
+			bnt_exit.onclick = Exit;
+			bnt_exit_block.appendChild(bnt_exit);
+		} 
+		else 
+		{
+			const loginBtn = document.createElement("button");
+			loginBtn.type = "button";
+			loginBtn.className = "login-btn";
+			loginBtn.textContent = "Вход";
+			loginBtn.onclick = Enter;
+			Choose_Enter_or_Login.appendChild(loginBtn);
+		}
+	}
+</script>
+
+</body>
+</html>

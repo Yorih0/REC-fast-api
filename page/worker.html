@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReCharge — Регистрация работника</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/order.css">
+  <link rel="stylesheet" href="css/toast.css">
+</head>
+
+<body>
+  <div class="hero">
+    <header class="top-bar">
+      <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+    </header>
+
+    <main class="content">
+      <div class="copy">
+        <p class="eyebrow">ТППО</p>
+        <h1>
+          Регистрация<br />
+          Работника
+        </h1>
+        <a class="ghost-button" href="#worker-form">Начать</a>
+      </div>
+
+      <div class="visual">
+        <img src="png/list.png" alt="Документ" class="list-image">
+      </div>
+    </main>
+  </div>
+
+  <section id="worker-form" class="app-order-section">
+    <div class="app-order-wrapper">
+      <div class="app-order-box">
+        <h1 class="app-order-title">Новый сотрудник</h1>
+
+        <form id="workerForm" class="app-order-form">
+
+          <div class="app-order-group">
+            <label>ФИО сотрудника</label>
+            <input type="text" name="fullname" id="fullname" placeholder="Иванов Иван Иванович" required>
+          </div>
+
+          <div class="app-order-group">
+            <label>Специальность</label>
+            <select name="speciality" id="speciality" required>
+              <option value="">Выберите специальность</option>
+              <option value="Диагност">Диагност</option>
+              <option value="Электрик">Электрик</option>
+              <option value="Механик">Механик</option>
+              <option value="Программист ЭБУ">Программист ЭБУ</option>
+              <option value="Инженер по батареям">Инженер по батареям</option>
+            </select>
+          </div>
+
+          <div class="app-order-group">
+            <label>Стаж (лет)</label>
+            <input type="number" name="experience" id="experience" min="0" max="50" placeholder="5" required>
+          </div>
+
+          <div class="app-order-group">
+            <label>Описание навыков</label>
+            <textarea
+              name="skills"
+              id="skills"
+              rows="4"
+              placeholder="Опишите ключевые навыки сотрудника"
+            ></textarea>
+          </div>
+
+          <div class="app-order-button">
+            <button type="submit" class="app-order-circle-btn">
+              <svg class="app-order-arrow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 4l8 8-8 8" />
+              </svg>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-line"></div>
+    <div class="footer-content">
+        <div class="footer-phone">+3752945674893</div>
+        <div class="footer-copyright">ReCharge 2025 ©</div>
+        <div class="footer-email">Recharge@gmail.com</div>
+    </div>
+  </footer>
+  <script src="js/General.js"></script>
+  <script>
+    document.getElementById('workerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        fullname: document.getElementById('fullname').value,
+        speciality: document.getElementById('speciality').value,
+        experience: document.getElementById('experience').value,
+        skills: document.getElementById('skills').value
+      };
+
+      fetch('/register_worker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Работник успешно зарегистрирован!');
+          document.getElementById('workerForm').reset();
+        } else {
+          alert('Ошибка при регистрации. Попробуйте снова.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при отправке данных.');
+      });
+    });
+  </script>
+
+</body>
+</html>
