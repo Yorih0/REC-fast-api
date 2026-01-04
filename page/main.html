@@ -16,7 +16,6 @@
 			<div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
 			<nav class="nav">
 					<div id="Choose_Enter_or_Login"></div>
-					<div id="btn_exit"></div>
 			</nav>
 		</header>
 
@@ -228,33 +227,22 @@
 	{
 		const Choose_Enter_or_Login = document.getElementById("Choose_Enter_or_Login");
 		Choose_Enter_or_Login.innerHTML = "";
-		const bnt_exit = document.getElementById("btn_exit");
-		bnt_exit.innerHTML = ""
 
 		if (hasHashkeyCookie()) 
 		{
 			// showToast("Авто вход","success");
 			const profileBtn = document.createElement("button");
 			profileBtn.type = "button";
-			profileBtn.className = "cta-btn";
+			profileBtn.className = "services-btn";
 			profileBtn.textContent = "Профиль";
 			profileBtn.onclick = Profile;
 			Choose_Enter_or_Login.appendChild(profileBtn);
-
-			const bnt_exit_block = document.getElementById("btn_exit");
-			bnt_exit_block.innerHTML = "";
-			const bnt_exit = document.createElement("button");
-			bnt_exit.type = "button";
-			bnt_exit.className = "login-btn";
-			bnt_exit.textContent = "Выйти";
-			bnt_exit.onclick = Exit;
-			bnt_exit_block.appendChild(bnt_exit);
 		} 
 		else 
 		{
 			const loginBtn = document.createElement("button");
 			loginBtn.type = "button";
-			loginBtn.className = "login-btn";
+			loginBtn.className = "services-btn";
 			loginBtn.textContent = "Вход";
 			loginBtn.onclick = Enter;
 			Choose_Enter_or_Login.appendChild(loginBtn);

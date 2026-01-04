@@ -6,14 +6,17 @@
   <title>ReCharge — Создаем заявку</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/toast.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/login.css">
   <link rel="stylesheet" href="css/order.css">
 </head>
 <body>
   <div class="hero">
-    <header class="top-bar">
+    <header class="header">
       <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+      <nav class="nav"></nav>
     </header>
 
     <main class="content">
@@ -23,7 +26,7 @@
           Создаем<br />
           Заявку
         </h1>
-        <a class="ghost-button" href="#app-form">Поехали</a>
+        <button class="services-btn" onclick="document.getElementById('app-form').scrollIntoView({ behavior: 'smooth' })">Поехали</button>
       </div>
       <div class="visual">
         <img src="png/list.png" alt="Документ" class="list-image">

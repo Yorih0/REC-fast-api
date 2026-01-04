@@ -1,3 +1,11 @@
+function Exit()
+{
+    document.cookie = "hashkey=; path=/; max-age=0";
+    showToast("Вы вышли из аккаунта","info");
+    setTimeout(() => {
+        window.location.href = "/";
+    }, 1000);
+}
 function Back()
 {
     window.location.href = "/";

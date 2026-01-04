@@ -1,10 +1,9 @@
 import sqlite3
 
 class Worker:
-    def __init__(self, id=None, user_id=None,status = None,name=None,specialization=None, stage=None, description_skills=None):
+    def __init__(self, id=None, user_id=None,name=None,specialization=None, stage=None, description_skills=None):
         self.__id = None
         self.__user_id = None
-        self.__status = None
         self.__name = None
         self.__specialization = None
         self.__stage = None
@@ -109,7 +108,7 @@ class Worker:
 
     # ----------------- Поиск по user_id -----------------
     @staticmethod
-    def Find_worker(user_id, file_db):
+    def Find_worker_by_user_id(user_id, file_db):
         con = sqlite3.connect(file_db)
         cursor = con.cursor()
         try:

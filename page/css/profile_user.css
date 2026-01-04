@@ -1,170 +1,304 @@
-/* ===== GLOBAL ===== */
+/* ===== PROFILE PAGE STYLES ===== */
+/* Note: This file extends main.css styles */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.profile-section {
+    max-width: 1200px;
+    margin: 60px auto 80px;
+    padding: 0 40px;
 }
 
-body {
-    font-family: 'Rubik', sans-serif;
-    background-color: #040404;
-    color: #ffffff;
-    line-height: 1.4;
-    overflow-x: hidden;
-}
-
-/* ===== HEADER ===== */
-
-header {
-    padding: 25px 40px;
+/* ===== PROFILE HEADER ===== */
+.profile-header {
     display: flex;
     align-items: center;
-}
-
-.logo {
-    font-size: 30px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-/* ===== PROFILE CARD ===== */
-
-.profile {
-    max-width: 600px;
-    margin: 80px auto 50px;
-    padding: 35px 40px;
-    border-radius: 12px;
-
+    gap: 30px;
+    margin-bottom: 50px;
+    padding: 40px;
+    border-radius: 20px;
     background: linear-gradient(#ffffff14, #ffffff05);
     border: 1px solid rgba(255,255,255,0.12);
     backdrop-filter: blur(10px);
-
     box-shadow: 0 25px 35px rgba(0,0,0,0.6);
 }
 
-.profile h2 {
-    font-size: 34px;
-    font-weight: 800;
-    margin-bottom: 25px;
-    text-align: center;
+.profile-avatar {
+    flex-shrink: 0;
 }
 
-.profile p {
-    font-size: 17px;
-    margin: 12px 0;
-    color: #d0d0d0;
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(81, 81, 81, 0.8), rgba(100, 100, 100, 0.9));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255,255,255,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.profile strong {
+.avatar-circle span {
+    font-size: 48px;
+    font-weight: 700;
     color: #ffffff;
 }
 
-/* ===== ORDERS GRID ===== */
+.profile-info {
+    flex: 1;
+}
 
-#ContenerForOrders {
-    max-width: 1200px;
-    margin: 0 auto 100px;
-    padding: 20px 40px;
+.profile-name {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
 
+.profile-role {
+    font-size: clamp(16px, 2vw, 20px);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+/* ===== PROFILE DETAILS ===== */
+.profile-details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 60px;
+}
+
+.detail-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    border-radius: 16px;
+    background: linear-gradient(#ffffff14, #ffffff05);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.6);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.detail-icon {
+    font-size: 32px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(81, 81, 81, 0.4);
+    flex-shrink: 0;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: clamp(16px, 2vw, 18px);
+    color: #ffffff;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+/* ===== ORDERS SECTION ===== */
+.orders-section {
+    max-width: 1200px;
+    margin: 0 auto 100px;
+    padding: 0 40px;
+}
+
+.orders-title {
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 30px;
 }
 
+.no-orders {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 18px;
+}
+
 /* ===== ORDER CARD ===== */
-
-#ContenerForOrders > div {
-    position: relative;
-    padding: 26px 26px 30px;
-    border-radius: 14px;
-
+.order-card {
+    padding: 30px;
+    border-radius: 20px;
     background: linear-gradient(#ffffff18, #ffffff05);
     border: 1px solid rgba(255,255,255,0.12);
     backdrop-filter: blur(12px);
-
     box-shadow: 0 25px 30px rgba(0,0,0,0.6);
-    transition: 0.35s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-#ContenerForOrders > div:hover {
+.order-card:hover {
     transform: translateY(-6px) scale(1.02);
     box-shadow: 0 40px 45px rgba(0,0,0,0.8);
+    border-color: rgba(255,255,255,0.2);
 }
 
-/* Order badge */
-#ContenerForOrders > div::before {
-    content: attr(id);
-    position: absolute;
-    top: -14px;
-    right: 18px;
-    background: #ffffff;
-    color: #000;
-    padding: 5px 14px;
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.order-number {
+    font-size: clamp(18px, 2.5vw, 22px);
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.order-status {
+    padding: 6px 16px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* ===== ORDER FIELDS ===== */
-
-div_brand {
-    display: block;
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 8px;
+/* ===== ORDER SECTIONS ===== */
+.order-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-div_model,
-div_license_plate,
-div_region,
-div_description_problem,
-div_status,
-div_worker_id,
-div_description_work {
-    display: block;
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-text {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    padding: 12px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    border-left: 3px solid rgba(255,255,255,0.3);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
     font-size: 14px;
-    margin: 6px 0;
-    color: #cfcfcf;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
 }
 
-/* Labels */
-
-div_model::before { content: "🚗 Модель: "; font-weight: 700; color:#fff; }
-div_license_plate::before { content: "🔢 Номер: "; font-weight: 700; color:#fff; }
-div_region::before { content: "🌍 Регион: "; font-weight: 700; color:#fff; }
-div_description_problem::before { content: "⚠️ Проблема: "; font-weight: 700; color:#fff; }
-div_status::before { content: "📌 Статус: "; font-weight: 700; color:#fff; }
-div_worker_id::before { content: "👨‍🔧 Мастер: "; font-weight: 700; color:#fff; }
-div_description_work::before { content: "🛠 Выполнено: "; font-weight: 700; color:#fff; }
-
-/* ===== STATUS BADGE ===== */
-
-div_status {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.15);
-    font-weight: 700;
+.info-value {
+    font-size: 15px;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: right;
 }
-#btn {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.15);
-    font-weight: 700;
-}
-/* ===== MOBILE ===== */
 
+.order-cancel-btn {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 768px) {
-    .profile {
-        margin: 50px 20px;
+    .profile-section {
+        margin: 40px 20px 60px;
+        padding: 0;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
         padding: 30px 24px;
     }
 
-    #ContenerForOrders {
-        padding: 10px 20px 60px;
+    .profile-details {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .orders-section {
+        margin: 0 20px 60px;
+        padding: 0;
+    }
+
+    .orders-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .order-card {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .avatar-circle span {
+        font-size: 40px;
+    }
+
+    .detail-card {
+        padding: 20px;
+    }
+
+    .order-card {
+        padding: 20px;
     }
 }

@@ -25,78 +25,9 @@ body {
   background: #000000;
 }
 
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 4px 0;
-}
+/* Header styles now use .header from main.css */
 
-.logo {
-  font-size: 30px;
-  font-weight: 700;
-  color: #ffffff;
-  position: relative;
-  z-index: 999;
-}
-
-.shine {
-  font-size: 1em;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.697);
-  background: #222 -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      from(#222),
-      to(#222),
-      color-stop(0.5, #fff)
-    ) 0 0 no-repeat;
-  background-image: -webkit-linear-gradient(
-    -40deg,
-    transparent 0%,
-    transparent 40%,
-    #fff 50%,
-    transparent 60%,
-    transparent 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-background-size: 50px;
-  background-size: 50px;
-  -webkit-animation: zezzz;
-  animation: zezzz;
-  -webkit-animation-duration: 8s;
-  animation-duration: 7s;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-}
-
-@-webkit-keyframes zezzz {
-  0% {
-    background-position: -200px;
-  }
-  20% {
-    background-position: 200px;
-  }
-  100% {
-    background-position: 200px;
-  }
-}
-
-@keyframes zezzz {
-  0% {
-    background-position: -200px;
-  }
-  20% {
-    background-position: 200px;
-  }
-  100% {
-    background-position: 200px;
-  }
-}
+/* Logo and shine styles now use from main.css */
 
 .user-pill {
   border: 3px solid #fff;
@@ -125,6 +56,12 @@ body {
   margin-top: -200px;
 }
 
+.copy .services-btn {
+  order: 3;
+  align-self: flex-start;
+  margin-top: 12px;
+}
+
 .eyebrow {
   display: none;
 }
@@ -137,35 +74,7 @@ h1 {
   letter-spacing: -1px;
 }
 
-.ghost-button {
-  order: 3;
-  align-self: flex-start;
-  border: 3px solid #3a3a3a;
-  color: #ffffff;
-  background: #3a3a3a;
-  border-radius: 999px;
-  padding: 12px 26px;
-  font-size: 20px;
-  font-weight: 800;
-  text-decoration: none;
-  cursor: pointer;
-  transition: 0.3s ease;
-  margin-top: 12px;
-}
-
-.ghost-button:hover,
-.ghost-button:focus {
-  color: #000000;
-  background: #ffffff;
-  border: 3px solid #ffffff;
-  box-shadow: 0 0 5px #ffffff, 0 0 20px #ffffff, 0 0 50px #ffffff,
-    0 0 100px #ffffff;
-  outline: none;
-}
-
-.ghost-button:active {
-  transform: translateY(0);
-}
+/* Кнопка ghost-button заменена на services-btn из main.css */
 
 .visual {
   display: flex;
@@ -204,71 +113,64 @@ h1 {
   width: 100%;
   max-width: 440px;
   border-radius: 20px;
-  background: #000;
+  background-color: #1f1f1f60;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 16px 32px;
+  padding: 50px 20px;
   overflow: hidden;
-}
-
-.app-order-box::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  padding: 3px;
-  background: linear-gradient(to top, #161616, #d1d1d1);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-  pointer-events: none;
+  box-shadow: 0 0 20px rgba(179, 179, 179, 0.452), 0 0 40px rgba(255, 255, 255, 0.05);
+  z-index: 1;
 }
 
 .app-order-title {
-  margin-top: 46px;
-  font-size: 32px;
-  font-weight: 800;
-  color: #fff;
+  text-align: center;
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 30px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .app-order-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 26px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .app-order-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 0 18px;
+  margin: 20px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .app-order-group label {
-  color: #fff;
-  font-size: 16px;
+  color: #ffffff;
+  font-size: clamp(14px, 4vw, 16px);
+  margin-bottom: 8px;
   font-weight: 700;
 }
 
 .app-order-group input,
 .app-order-group select,
 .app-order-group textarea {
-  padding: 12px 14px;
-  border: 3px solid #fff;
+  padding: 10px;
+  border: 3px solid #3a3a3a;
   border-radius: 20px;
-  background: transparent;
-  color: #fff;
-  font-size: 16px;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  font-size: clamp(14px, 4vw, 16px);
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s, background-color 0.3s;
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
 }
 
 .app-order-group textarea {
@@ -278,7 +180,8 @@ h1 {
 .app-order-group input:focus,
 .app-order-group select:focus,
 .app-order-group textarea:focus {
-  border-color: #d1d1d1;
+  border-color: #ffffff;
+  background-color: #4a4a4a;
 }
 
 /* PLATE */
@@ -307,25 +210,29 @@ h1 {
 /* BUTTON */
 .app-order-button {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin-top: 18px;
+  margin-top: 30px;
+  position: relative;
+  z-index: 2;
 }
 
 .app-order-circle-btn {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #000;
-  border: 3px solid #fff;
+  border: none;
+  background-color: #4A4A4A;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .app-order-circle-btn:hover {
-  background: #222;
+  background-color: #222;
   transform: scale(1.05);
 }
 
@@ -447,41 +354,7 @@ h1 {
     font-weight: 400;
     justify-self: end;
 }
-/* Тёмный селектор */
-select {
-    background-color: #1e1e1e;      /* тёмный фон */
-    color: #ffffff;                 /* белый текст */
-    border: 1px solid #444;         /* мягкая граница */
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-family: "Inter", sans-serif;
-    appearance: none;               /* убираем стандартную стрелку */
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-/* При наведении */
-select:hover {
-    border-color: #777;
-}
-
-/* При фокусе */
-select:focus {
-    outline: none;
-    border-color: #00aaff;
-    box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.3);
-}
-
-/* Стиль выпадающего списка */
-select option {
-    background-color: #1e1e1e;
-    color: #ffffff;
-}
-select option:hover {
-    background-color: #1e1e1e;
-    color: #000000;
-}
+/* Стили для select уже применены через .app-order-group select */
 
 /* Chrome, Safari, Edge */
 input[type="number"]::-webkit-inner-spin-button,

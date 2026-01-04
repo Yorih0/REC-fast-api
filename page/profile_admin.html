@@ -2,30 +2,101 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Профиль</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль администратора</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/profile_user.css">
-    <link rel="apple-touch-icon" href="png/pes.png">
 </head>
 <body>
-    <header>
-        <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
-    </header>
-    <div class="profile">
-        <h2 id="login">Загрузка...</h2>
-        <p><strong>Email:</strong> <span id="email"></span></p>
-        <p><strong>Phone:</strong> <span id="phone"></span></p>
-        <p><strong>Role:</strong> <span id="role"></span></p>
-    </div>
-    <div id = "ContenerForOrders"></div>
+    <main class="main-container">
+        <header class="header">
+            <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+            <nav class="nav">
+                <button class="services-btn" onclick="Exit()">Выйти</button>
+            </nav>
+        </header>
+
+        <section class="profile-section">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="avatar-circle">
+                        <span id="avatar-initial">A</span>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-name">Администратор</h1>
+                    <p class="profile-role" id="role">Admin</p>
+                </div>
+            </div>
+
+            <div class="profile-details">
+                <div class="detail-card">
+                    <div class="detail-icon">👑</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Роль</div>
+                        <div class="detail-value" id="role-display">Администратор</div>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-icon">📋</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Всего заказов</div>
+                        <div class="detail-value" id="total-orders">0</div>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-icon">⚙️</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Управление</div>
+                        <div class="detail-value">Панель администратора</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="orders-section">
+            <h2 class="orders-title">Все заказы</h2>
+            <div id="ContenerForOrders" class="orders-container">
+                <div class="no-orders" id="no-orders" style="display: none;">
+                    <p>Заказов пока нет</p>
+                </div>
+            </div>
+        </section>
+    </main>
     <script src="js/General.js"></script>
     <script>
         const formData = { hashkey: getCookie('hashkey'),};
+
+        function Exit()
+        {
+            document.cookie = "hashkey=; path=/; max-age=0";
+            showToast("Вы вышли из аккаунта","info");
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
+        }
+
+        function getStatusColor(status) {
+            const statusColors = {
+                'Обработка': '#ffa500',
+                'В работе': '#2196F3',
+                'Выполнено': '#4CAF50',
+                'Отменено': '#f44336'
+            };
+            return statusColors[status] || '#9e9e9e';
+        }
 
         document.addEventListener("DOMContentLoaded", async () => {
             if (!formData.hashkey) 
             {
                 showToast("Пользователь не авторизован", "error");
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1000);
                 return;
             }
             try 
@@ -44,112 +115,155 @@
                     showToast(data.message || "Ошибка загрузки профиля", "error");
                     return;
                 }
-                document.getElementById("login").textContent = data.login;
-                document.getElementById("email").textContent = data.email;
-                document.getElementById("phone").textContent = data.phone;
-                document.getElementById("role").textContent = data.role;
+                
+                document.getElementById("role-display").textContent = "Администратор";
+                document.getElementById("total-orders").textContent = data.count || 0;
+                
                 if(data.count > 0)
                 {
-                    console.log(data);  
-                    CreatorDivs(data.count,"ContenerForOrders",data.orders)
+                    document.getElementById("no-orders").style.display = "none";
+                    CreatorDivs(data.count,"ContenerForOrders",data.orders);
+                }
+                else
+                {
+                    document.getElementById("no-orders").style.display = "block";
                 }
 
             } 
             catch (error) 
-            { showToast("Ошибка соединения с сервером", "error");}
+            { 
+                showToast("Ошибка соединения с сервером", "error");
+            }
         });
-        function CreatorDivs(n,where,orders)
+
+                function CreatorDivs(n,where,orders)
         {
             try
             {
-                const container = document.getElementById(where)
-                for (let i = 1; i <= n;i++)
+                const container = document.getElementById(where);
+                container.innerHTML = "";
+                
+                for (let i = 1; i <= n; i++)
                 {
-                    order = orders[`order-${i}`];
-                    const div = document.createElement("div");
-                    div.id = `Заказ ${i}`;
+                    //карточка
+                    const order = orders[`order-${i}`];
+                    const orderCard = document.createElement("div");
+                    orderCard.className = "order-card";
+                    //заголовок
+                    const orderHeader = document.createElement("div");
+                    orderHeader.className = "order-header";
+
+                    const orderNumber = document.createElement("div");
+                    orderNumber.className = "order-number";
+                    orderNumber.textContent = `Заказ #${order.id || i}`;
+                    orderHeader.appendChild(orderNumber);
                     
-                    const div_brand = document.createElement("div_brand");
-                    div_brand.textContent = `${order.model}`;
-                    div.appendChild(div_brand)
-
-                    const div_model = document.createElement("div_model");
-                    div_model.textContent = `${order.model}`;
-                    div.appendChild(div_model)
-
-                    const div_license_plate = document.createElement("div_license_plate");
-                    div_license_plate.textContent = `${order.license_plate}`;
-                    div.appendChild(div_license_plate)
-
-                    const div_region = document.createElement("div_region");
-                    div_region.textContent = `${order.region}`;
-                    div.appendChild(div_region)
-
-                    const div_description_problem = document.createElement("div_description_problem");
-                    div_description_problem.textContent = `${order.description_problem}`;
-                    div.appendChild(div_description_problem)
+                    const orderStatus = document.createElement("div");
+                    orderStatus.className = "order-status";
+                    orderStatus.textContent = order.status || "Обработка";
+                    orderStatus.style.backgroundColor = getStatusColor(order.status || "Обработка");
+                    orderHeader.appendChild(orderStatus);
                     
-                    const div_status = document.createElement("div_status");
-                    div_status.textContent = `${order.status}`;
-                    div.appendChild(div_status)
+                    orderCard.appendChild(orderHeader);
 
-                    const div_worker_id = document.createElement("div_worker_id");
-                    div_worker_id.textContent = `${order.worker_id}`;
-                    div.appendChild(div_worker_id)
-
-                    const div_description_work = document.createElement("div_description_work");
-                    div_description_work.textContent = `${order.dediv_description_work}`;
-                    div.appendChild(div_description_work)
-
+                    // Информация об автомобиле
+                    const carInfo = document.createElement("div");
+                    carInfo.className = "order-section";
                     
-                    const button = document.createElement("button");
-                    button.textContent = "Назначить";
-                    button.id = "btn"
-                    button.type = "button"
-                    button.onclick = cancel
-                    div.appendChild(button)
+                    const carTitle = document.createElement("div");
+                    carTitle.className = "section-title";
+                    carTitle.textContent = "🚗 Автомобиль";
+                    carInfo.appendChild(carTitle);
+                    
+                    const carDetails = document.createElement("div");
+                    carDetails.className = "section-content";
+                    
+                    const brandRow = document.createElement("div");
+                    brandRow.className = "info-row";
+                    brandRow.innerHTML = `<span class="info-label">Марка:</span><span class="info-value">${order.brand}</span>`;
+                    carDetails.appendChild(brandRow);
+                    
+                    const modelRow = document.createElement("div");
+                    modelRow.className = "info-row";
+                    modelRow.innerHTML = `<span class="info-label">Модель:</span><span class="info-value">${order.model}</span>`;
+                    carDetails.appendChild(modelRow);
+                    
+                    const plateRow = document.createElement("div");
+                    plateRow.className = "info-row";
+                    plateRow.innerHTML = `<span class="info-label">Номер:</span><span class="info-value">${order.license_plate}-${order.region}</span>`;
+                    carDetails.appendChild(plateRow);
+                    
+                    carInfo.appendChild(carDetails);
+                    orderCard.appendChild(carInfo);
 
-                    container.appendChild(div)
+                    // Описание проблемы
+                    const problemSection = document.createElement("div");
+                    problemSection.className = "order-section";
+                    
+                    const problemTitle = document.createElement("div");
+                    problemTitle.className = "section-title";
+                    problemTitle.textContent = "⚠️ Проблема";
+                    problemSection.appendChild(problemTitle);
+                    
+                    const problemText = document.createElement("div");
+                    problemText.className = "section-text";
+                    problemText.textContent = order.description_problem;
+                    problemSection.appendChild(problemText);
+                    
+                    orderCard.appendChild(problemSection);
+
+                    // Информация о работе
+                    const workSection = document.createElement("div");
+                    workSection.className = "order-section";
+                    
+                    const workTitle = document.createElement("div");
+                    workTitle.className = "section-title";
+                    workTitle.textContent = "🛠️ Работа";
+                    workSection.appendChild(workTitle);
+                    
+                    const workContent = document.createElement("div");
+                    workContent.className = "section-content";
+                        
+                    const workerRow = document.createElement("div");
+                    workerRow.className = "info-row";
+                    workerRow.innerHTML = `<span class="info-label">Мастер:</span><span class="info-value">ID ${order.worker_id}</span>`;
+                    workContent.appendChild(workerRow);
+                    
+                    
+                    const workText = document.createElement("div");
+                    workText.className = "section-text";
+                    workText.textContent = order.description_work;
+                    workContent.appendChild(workText);
+                    
+                    
+                    workSection.appendChild(workContent);
+                    orderCard.appendChild(workSection);
+                    
+
+                    // Кнопка отмены
+                    if (order.status !== "Выполнено" && order.status !== "Отменено") {
+                        const cancelBtn = document.createElement("button");
+                        cancelBtn.className = "services-btn order-cancel-btn";
+                        cancelBtn.textContent = "Отменить заказ";
+                        cancelBtn.type = "button";
+                        cancelBtn.onclick = function() { cancelOrder(order.id); };
+                        orderCard.appendChild(cancelBtn);
+                    }
+
+                    container.appendChild(orderCard);
                 }
             }
             catch(error)
             {
-                showToast(error,"error")
-                console.log(error)
+                showToast(error,"error");
+                console.log(error);
             }
         }
-        async function cancel() 
-        {
-              const formData = {
-                hashkey: getCookie('hashkey'), 
-                
-            };
-            try 
-            {
-                const response = await fetch('/Profile', {
-                method: 'DELETE',
-                headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-                },body: JSON.stringify(formData)
-                });
 
-                const result = await response.json();
-                if (response.ok) 
-                {
-                    showToast(result.message, "success");
-                    // setTimeout(() => { window.location.href = "/profile"; }, 500);
-                } 
-                else 
-                {
-                    showToast(result.message, "error");
-                }
-            }
-            catch (err)
-            {
-                showToast("Ошибка сети", "error");
-            }
-            return false;
+        async function assignWorker(orderId) 
+        {
+
+            showToast("Функция назначения мастера будет реализована позже", "info");
         }
     </script>
 </body>

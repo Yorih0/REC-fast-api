@@ -14,9 +14,14 @@ body {
 }
 
 /* ===== HEADER ===== */
-header {
+header.header {
+  padding: 25px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  position: relative;
   width: 100%;
-  padding: 22px;
   background-color: #000000;
 }
 

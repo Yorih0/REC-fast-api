@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from Class.user import User
 from Class.order import Order as Orders
+from Class.worker import Worker
 import random
 
 FILE_DB = f"Data/BANK.db"
@@ -215,7 +216,15 @@ async def load_profile(request:Request):
                     }
         id_count = 1
         for ord in orders:
-            
+            worker = Worker.Find_worker_by_user_id(ord.worker_id,FILE_DB)
+            if worker: 
+                worker_name = worker.name 
+            else: 
+                worker_name = "Не назначен"
+            if ord.description_work in (None, "None"): 
+                description_work = "Ничего не делали"
+            else:
+                description_work = ord.description_work
             response["orders"][f"order-{id_count}"] = {
                 "id" : ord.id,
                 "brand" : ord.brand,
@@ -224,8 +233,8 @@ async def load_profile(request:Request):
                 "region" : ord.region,
                 "description_problem" : ord.description_problem,
                 "status" : ord.status,
-                "worker_id" : ord.worker_id,
-                "description_work" : ord.description_work
+                "worker_id" : worker_name,
+                "description_work" : description_work
             }
             id_count+=1
         try:
@@ -258,6 +267,15 @@ async def load_profile(request:Request):
                     }
         id_count = 1
         for ord in orders:
+            worker = Worker.Find_worker_by_user_id(ord.worker_id,FILE_DB)
+            if worker: 
+                worker_name = worker.name 
+            else: 
+                worker_name = "Не назначен"
+            if ord.description_work in (None, "None"): 
+                description_work = "Ничего не делали"
+            else:
+                description_work = ord.description_work
             response["orders"][f"order-{id_count}"] = {
                 "id" : ord.id,
                 "brand" : ord.brand,
@@ -266,8 +284,8 @@ async def load_profile(request:Request):
                 "region" : ord.region,
                 "description_problem" : ord.description_problem,
                 "status" : ord.status,
-                "worker_id" : ord.worker_id,
-                "description_work" : ord.description_work
+                "worker_id" : worker_name,
+                "description_work" : description_work
             }
             id_count+=1
         try:
