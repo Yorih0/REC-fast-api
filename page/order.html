@@ -155,7 +155,7 @@ async function Order_Form(event)
     if (response.ok) 
     {
         showToast(result.message, "success");
-        setTimeout(() => { window.location.href = "/profile"; }, 500);
+        setTimeout(() => { Profile() }, 500);
     } 
     else 
     {

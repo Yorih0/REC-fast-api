@@ -1,3 +1,50 @@
+async function Profile() 
+{
+    const formData = {
+        hashkey: getCookie('hashkey'),
+    };
+    try 
+    {
+        const response = await fetch('/Profile', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        },body: JSON.stringify(formData)
+        });
+        const result = await response.json();
+        if (response.ok) 
+        {
+            switch(result.type)
+            {
+                case "Customer":
+                {
+                    window.location.href = "/profile_user";
+                    break;
+                }
+                case "Worker":
+                {
+                    window.location.href = "/profile_worker";
+                    break;
+                }
+                case "Admin":
+                {
+                    window.location.href = "/profile_admin";
+                    break;
+                }
+            }
+        }
+        else 
+        {
+            showToast(result.message, "error");
+        }
+    }
+    catch (err)
+    {
+            showToast("Ошибка сети", "error");
+    }
+    return false;
+}
 function Exit()
 {
     document.cookie = "hashkey=; path=/; max-age=0";
