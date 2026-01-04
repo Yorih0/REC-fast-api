@@ -43,7 +43,7 @@
       <div class="app-order-box">
         <h1 class="app-order-title">Новый сотрудник</h1>
 
-        <form id="workerForm" class="app-order-form">
+        <form id="workerForm" class="app-order-form" onsubmit="return Register_Form(event)">
 
           <div class="app-order-group">
             <label>ФИО сотрудника</label>
@@ -100,34 +100,43 @@
   </footer>
   <script src="js/General.js"></script>
   <script>
-    document.getElementById('workerForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const formData = {
+    async function Register_Form(event) 
+    {
+      event.preventDefault();
+      const formData = { 
+        hashkey: getCookie('hashkey'),
         fullname: document.getElementById('fullname').value,
         speciality: document.getElementById('speciality').value,
         experience: document.getElementById('experience').value,
         skills: document.getElementById('skills').value
       };
+      try 
+      {
+        const response = await fetch('/Register_worker  ', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
 
-      fetch('/register_worker', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-      .then(response => {
-        if (response.ok) {
-          alert('Работник успешно зарегистрирован!');
-          document.getElementById('workerForm').reset();
-        } else {
-          alert('Ошибка при регистрации. Попробуйте снова.');
+        const result = await response.json();
+        if (response.ok) 
+        {
+          showToast(result.message, "success");
+          setTimeout(() => { Profile() }, 500);
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Произошла ошибка при отправке данных.');
-      });
-    });
+        else {
+          showToast(result.message, "error");
+        }
+      } 
+      catch (err) 
+      {
+        showToast("Ошибка сети"+err.message  , "error");
+      }
+      return false;
+    }
   </script>
 
 </body>

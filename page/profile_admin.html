@@ -66,6 +66,21 @@
                 </div>
             </div>
         </section>
+        <div id="workerModal" class="modal">
+        <div class="modal-content">
+            <h3>Назначить мастера</h3>
+
+            <select id="workerSelect">
+            <option disabled selected>Загрузка...</option>
+            </select>
+
+            <div class="modal-actions">
+            <button class="services-btn" onclick="confirmAssign()">Назначить</button>
+            <button class="services-btn cancel" onclick="closeModal()">Отмена</button>
+            </div>
+        </div>
+        </div>
+
     </main>
     <script src="js/General.js"></script>
     <script>
@@ -136,7 +151,7 @@
             }
         });
 
-                function CreatorDivs(n,where,orders)
+        function CreatorDivs(n,where,orders)
         {
             try
             {
@@ -149,13 +164,18 @@
                     const order = orders[`order-${i}`];
                     const orderCard = document.createElement("div");
                     orderCard.className = "order-card";
+                    orderCard.addEventListener("click", () => {
+                        openAssignModal(order.id);
+                    });
+
                     //заголовок
                     const orderHeader = document.createElement("div");
                     orderHeader.className = "order-header";
 
                     const orderNumber = document.createElement("div");
                     orderNumber.className = "order-number";
-                    orderNumber.textContent = `Заказ #${order.id || i}`;
+                    orderNumber.textContent = `Заказ #${i}`;
+                    orderNumber.dataset.orderId = order.id;
                     orderHeader.appendChild(orderNumber);
                     
                     const orderStatus = document.createElement("div");
@@ -226,7 +246,7 @@
                         
                     const workerRow = document.createElement("div");
                     workerRow.className = "info-row";
-                    workerRow.innerHTML = `<span class="info-label">Мастер:</span><span class="info-value">ID ${order.worker_id}</span>`;
+                    workerRow.innerHTML = `<span class="info-label">Мастер:</span><span class="info-value"> ${order.worker_id}</span>`;
                     workContent.appendChild(workerRow);
                     
                     
@@ -240,8 +260,9 @@
                     orderCard.appendChild(workSection);
                     
 
-                    // Кнопка отмены
-                    if (order.status !== "Выполнено" && order.status !== "Отменено") {
+                    
+                    if (order.status !== "Выполнено" && order.status !== "Отменено") 
+                    {
                         const cancelBtn = document.createElement("button");
                         cancelBtn.className = "services-btn order-cancel-btn";
                         cancelBtn.textContent = "Отменить заказ";
@@ -265,6 +286,113 @@
 
             showToast("Функция назначения мастера будет реализована позже", "info");
         }
+        async function cancelOrder(orderId) 
+        {
+            const formData = {
+                hashkey: getCookie('hashkey'),
+                order_id: orderId
+            };
+            try 
+            {
+                const response = await fetch('/Del_order', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                if (response.ok) 
+                {
+                    showToast(result.message, "success");
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } 
+                else 
+                {
+                    showToast(result.message, "error");
+                }
+            }
+            catch (err)
+            {
+                showToast("Ошибка сети", "error");
+            }
+            return false;
+        }
+    </script>
+    
+    <script>
+        let currentOrderId = null;
+
+        function openAssignModal(orderId) {
+            currentOrderId = orderId;
+            document.getElementById("workerModal").style.display = "flex";
+            loadWorkers();
+        }
+
+        function closeModal() {
+            document.getElementById("workerModal").style.display = "none";
+        }
+
+        async function loadWorkers() {
+            const select = document.getElementById("workerSelect");
+            select.innerHTML = "<option>Загрузка...</option>";
+
+            try {
+                const res = await fetch("/get_workers");
+                if (!res.ok) {
+                    throw new Error("Ошибка загрузки списка работников");
+                }
+                const workers = await res.json();
+
+                select.innerHTML = "";
+                workers.forEach(w => {
+                    const option = document.createElement("option");
+                    option.value = w.id;
+                    option.textContent = w.name;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                select.innerHTML = "<option>Ошибка загрузки</option>";
+                showToast(err.message, "error");
+            }
+        }
+
+        async function confirmAssign() {
+            const workerId = document.getElementById("workerSelect").value;
+            if (!workerId) {
+                showToast("Выберите работника", "error");
+                return;
+            }
+
+            try {
+                const res = await fetch("/assign_worker", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        order_id: currentOrderId,
+                        worker_id: workerId
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showToast("Мастер назначен", "success");
+                    closeModal();
+                    location.reload();
+                } else {
+                    showToast(data.message || "Ошибка", "error");
+                }
+            } catch (err) {
+                showToast("Ошибка сети", "error");
+            }
+        }
+
+
     </script>
 </body>
 </html>

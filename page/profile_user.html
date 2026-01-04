@@ -158,7 +158,8 @@
 
                     const orderNumber = document.createElement("div");
                     orderNumber.className = "order-number";
-                    orderNumber.textContent = `Заказ #${order.id || i}`;
+                    orderNumber.textContent = `Заказ #${i}`;
+                    orderNumber.dataset.orderId = order.id;
                     orderHeader.appendChild(orderNumber);
                     
                     const orderStatus = document.createElement("div");
@@ -229,7 +230,7 @@
                         
                     const workerRow = document.createElement("div");
                     workerRow.className = "info-row";
-                    workerRow.innerHTML = `<span class="info-label">Мастер:</span><span class="info-value">ID ${order.worker_id}</span>`;
+                    workerRow.innerHTML = `<span class="info-label">Мастер:</span><span class="info-value">${order.worker_id}</span>`;
                     workContent.appendChild(workerRow);
                     
                     
@@ -271,7 +272,7 @@
             };
             try 
             {
-                const response = await fetch('/Profile', {
+                const response = await fetch('/Del_order', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

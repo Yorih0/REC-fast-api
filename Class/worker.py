@@ -87,16 +87,28 @@ class Worker:
     def Create_worker(self, file_db):
         if not self.user_id:
             return {"status": "error", "message": "user_id не задан"}
+        if not self.name:
+            return {"status": "error", "message": "Имя работника не задано"}
 
         con = sqlite3.connect(file_db)
         cursor = con.cursor()
         try:
+            cursor.execute("SELECT id FROM Workers WHERE user_id = ?", (self.user_id,))
+            existing_user = cursor.fetchone()
+            if existing_user:
+                return {"status": "error", "message": "Работник уже существует"}
+
+            cursor.execute("SELECT id FROM Workers WHERE name = ?", (self.name,))
+            existing_name = cursor.fetchone()
+            if existing_name:
+                return {"status": "error", "message": "Работник с таким именем уже существует"}
+
             con.execute("BEGIN TRANSACTION")
             cursor.execute("""
-                INSERT INTO Workers (user_id, name, specialization, stage, description_skills)
-                VALUES (?, ?, ?, ?, ?)
-            """, (self.user_id, self.name, self.specialization,
-                  self.stage, self.description_skills))
+                INSERT INTO Workers (user_id, name, specialization, status, stage, description_skills)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (self.user_id, self.name, self.specialization, "Работает",
+                self.stage, self.description_skills))
             self.id = cursor.lastrowid
             con.commit()
             return {"status": "success", "message": "Работник добавлен"}
@@ -105,7 +117,27 @@ class Worker:
             return {"status": "error", "message": f"Ошибка базы данных: {e}"}
         finally:
             con.close()
-
+    def Get_all_workers(file_db): 
+        con = sqlite3.connect(file_db) 
+        cursor = con.cursor() 
+        try: 
+            cursor.execute(""" SELECT id, user_id, name, specialization, status, stage, description_skills FROM Workers """) 
+            rows = cursor.fetchall() 
+            workers = [] 
+            for row in rows: 
+                workers.append({ "id": row[0], 
+                                "user_id": row[1], 
+                                "name": row[2], 
+                                "specialization": row[3], 
+                                "status": row[4], 
+                                "stage": row[5], 
+                                "description_skills": row[6] 
+                                }) 
+            return {"status": "success", "workers": workers} 
+        except sqlite3.Error as e: 
+            return {"status": "error", "message": f"Ошибка базы данных: {e}"} 
+        finally: 
+            con.close()
     # ----------------- Поиск по user_id -----------------
     @staticmethod
     def Find_worker_by_user_id(user_id, file_db):
@@ -116,6 +148,28 @@ class Worker:
                 SELECT id, user_id, name, specialization, stage, description_skills
                 FROM Workers WHERE user_id = ?
             """, (user_id,))
+            row = cursor.fetchone()
+            if not row:
+                return None
+            return Worker(
+                id=row[0],
+                user_id=row[1],
+                name=row[2],
+                specialization=row[3],
+                stage=row[4],
+                description_skills=row[5]
+            )
+        finally:
+            con.close()
+    @staticmethod
+    def Find_worker_by_id(worker_id, file_db):
+        con = sqlite3.connect(file_db)
+        cursor = con.cursor()
+        try:
+            cursor.execute("""
+                SELECT id, user_id, name, specialization, stage, description_skills
+                FROM Workers WHERE id = ?
+            """, (worker_id,))
             row = cursor.fetchone()
             if not row:
                 return None

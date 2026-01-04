@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль работника</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/profile_user.css">
+</head>
+<body>
+<main class="main-container">
+
+<header class="header">
+    <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
+    <nav class="nav">
+        <button class="services-btn" onclick="Exit()">Выйти</button>
+    </nav>
+</header>
+
+<section class="profile-section">
+<div class="profile-header">
+    <div class="profile-avatar">
+        <div class="avatar-circle">
+            <span id="avatar-initial">W</span>
+        </div>
+    </div>
+    <div class="profile-info">
+        <h1 class="profile-name" id="login">Загрузка...</h1>
+        <p class="profile-role">Работник</p>
+    </div>
+</div>
+
+<div class="profile-details">
+    <div class="detail-card">
+        <div class="detail-icon">👤</div>
+        <div class="detail-content">
+            <div class="detail-label">Роль</div>
+            <div class="detail-value">Работник</div>
+        </div>
+    </div>
+    <div class="detail-card">
+        <div class="detail-icon">📋</div>
+        <div class="detail-content">
+            <div class="detail-label">Назначенных заказов</div>
+            <div class="detail-value" id="total-orders">0</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<section class="orders-section">
+<h2 class="orders-title">Назначенные мне заказы</h2>
+<div id="ContenerForOrders" class="orders-container">
+    <div class="no-orders" id="no-orders" style="display:none;">
+        <p>Вам пока не назначили заказы</p>
+    </div>
+</div>
+</section>
+
+</main>
+
+<script src="js/General.js"></script>
+<script>
+const formData = { hashkey: getCookie('hashkey') };
+
+function getStatusColor(status) {
+    const map = { 'Обработка':'#ffa500', 'В работе':'#2196F3', 'Выполнено':'#4CAF50', 'Отменено':'#f44336' };
+    return map[status] || '#9e9e9e';
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    if (!formData.hashkey) return location.href="/";
+
+    const res = await fetch("/load_profile_worker", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+    if (!res.ok) return showToast(data.message,"error");
+
+    document.getElementById("login").textContent = data.login;
+    document.getElementById("avatar-initial").textContent = data.login[0].toUpperCase();
+    document.getElementById("total-orders").textContent = data.count;
+
+    if(data.count) createOrders(data.orders);
+    else document.getElementById("no-orders").style.display="block";
+});
+
+function createOrders(orders){
+    const container = document.getElementById("ContenerForOrders");
+    container.innerHTML="";
+
+    Object.values(orders).forEach(order=>{
+        const card = document.createElement("div");
+        card.className="order-card";
+
+        card.innerHTML = `
+        <div class="order-header">
+            <div class="order-number">Заказ #${order.id}</div>
+            <div class="order-status" style="background:${getStatusColor(order.status)}">${order.status}</div>
+        </div>
+
+        <div class="order-section">
+            <div class="section-title">🚗 Автомобиль</div>
+            <div class="section-content">
+                <div class="info-row"><span>Марка:</span><span>${order.brand}</span></div>
+                <div class="info-row"><span>Модель:</span><span>${order.model}</span></div>
+                <div class="info-row"><span>Номер:</span><span>${order.license_plate}-${order.region}</span></div>
+            </div>
+        </div>
+
+        <div class="order-section">
+            <div class="section-title">⚠️ Проблема</div>
+            <div class="section-text">${order.description_problem}</div>
+        </div>
+
+        <div class="order-section">
+            <div class="section-title">🛠️ Работа</div>
+            <div class="section-text">${order.description_work || "Описание работы не добавлено"}</div>
+        </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+</script>
+</body>
+</html>

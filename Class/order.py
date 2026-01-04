@@ -70,6 +70,21 @@ class Order:
             return orders
         finally:
             con.close()
+            
+    @staticmethod
+    def get_orders_by_worker_id(file_db, worker_id):
+        con = sqlite3.connect(file_db)
+        cursor = con.cursor()
+        orders = []
+        try:
+            cursor.execute("SELECT * FROM Orders WHERE worker_id = ?", (worker_id,))
+            rows = cursor.fetchall()
+            for row in rows:
+                orders.append(Order(*row))
+            return orders
+        finally:
+            con.close()
+
     # ====== Получение всех заказов для админа ======
     @staticmethod 
     def get_all_orders(file_db): 

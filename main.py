@@ -58,6 +58,16 @@ def profile_page():
 def profile_page():
       return render_page("profile_worker")
 
+@app.get("/get_workers") 
+async def get_workers(): 
+    try: 
+        result = Worker.Get_all_workers(FILE_DB) 
+        if result["status"] == "success": 
+            return JSONResponse(result["workers"],status_code=200)
+        else: 
+            return JSONResponse(result, status_code=400) 
+    except Exception as e: 
+        return JSONResponse({"message": str(e)}, status_code=500)
 #Post
 @app.post("/Login")
 async def login(request: Request):
@@ -87,7 +97,7 @@ async def login(request: Request):
 
 
 @app.post("/Register")
-async def Register(request: Request):
+async def Register_user(request: Request):
     try:
         data = await request.json()
     except Exception:
@@ -122,6 +132,48 @@ async def Register(request: Request):
         except ValueError as e:
             return JSONResponse({"message": str(e)}, status_code=401)
 
+
+
+@app.post("/Register_worker")
+async def Register_worker(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
+
+    hashkey = data.get("hashkey")
+    name = data.get("fullname")
+    specialization = data.get("speciality")
+    stage = data.get("experience")
+    description_skills = data.get("skills")
+ 
+    if not all([hashkey, name, specialization,stage,description_skills]):
+        return JSONResponse({"message": "Не заполнены обязательные поля"}, status_code=400)
+    try:
+        user = User.by_hashkey({"hashkey": hashkey}, FILE_DB)
+        if not user:
+            return JSONResponse({"message": "Пользователь не найден"}, status_code=401)
+
+        worker = Worker(
+            user_id=(user.id),
+            name = (name),
+            specialization=(specialization),
+            stage=(stage),
+            description_skills=(description_skills)
+        )
+
+        result = worker.Create_worker(FILE_DB)
+        if result["status"] == "success":
+            print(user.role)
+            user.Update_role(FILE_DB,"Worker")
+            print(user.role)
+            return JSONResponse({"message": "Работник успешно зарегистрирован"}, status_code=200)
+        else:
+            return JSONResponse({"message": result["message"]}, status_code=400)
+
+    except ValueError as e:
+        return JSONResponse({"message": str(e)}, status_code=401)
+        
 
 
 @app.post("/Order")
@@ -171,6 +223,30 @@ async def Order(request: Request):
     except ValueError as e:
         return JSONResponse({"message": str(e)}, status_code=401)
 
+
+
+@app.delete("/Del_order")
+async def del_order(request : Request):
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
+    hashkey = data.get("hashkey")
+    order_id = data.get("order_id")
+    try:
+        user = User.by_hashkey({"hashkey": hashkey}, FILE_DB)
+        if not user:
+            return JSONResponse({"message": "Пользователь не найден"}, status_code=401)
+        
+        order = Orders.get_order_by_id(FILE_DB,order_id)
+        if(order.status == "Обработка"):
+            Orders.delete_order(order,FILE_DB)
+            return JSONResponse({"message":"Вы успехно удалили заказ"},status_code=200)
+            
+        return JSONResponse({"message":"Заказ уже был принят и его нельзя удалить"})
+    except ValueError as e:
+        return JSONResponse({"message" : str(e)},status_code=401)
+    
 
 
 @app.post("/Profile")
@@ -267,7 +343,7 @@ async def load_profile(request:Request):
                     }
         id_count = 1
         for ord in orders:
-            worker = Worker.Find_worker_by_user_id(ord.worker_id,FILE_DB)
+            worker = Worker.Find_worker_by_id(ord.worker_id,FILE_DB)
             if worker: 
                 worker_name = worker.name 
             else: 
@@ -297,6 +373,68 @@ async def load_profile(request:Request):
 
 
 
+@app.post("/load_profile_worker")
+async def load_profile_worker(request: Request):
+    try:
+        data = await request.json()
+    except:
+        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
+
+    try:
+        user = User.by_hashkey(data, FILE_DB)
+
+        worker = Worker.Find_worker_by_user_id(user.id, FILE_DB)
+        if not worker:
+            return JSONResponse({"message": "Пользователь не является работником"}, status_code=403)
+
+        orders = Orders.get_orders_by_worker_id(FILE_DB, worker.id)
+
+        response = {
+            "message": "Загрузка",
+            "login": user.login,
+            "count": len(orders),
+            "orders": {}
+        }
+
+        id_count = 1
+        for ord in orders:
+            description_work = ord.description_work if ord.description_work not in (None, "None") else "Описание работы не добавлено"
+
+            response["orders"][f"order-{id_count}"] = {
+                "id": ord.id,
+                "brand": ord.brand,
+                "model": ord.model,
+                "license_plate": ord.license_plate,
+                "region": ord.region,
+                "description_problem": ord.description_problem,
+                "status": ord.status,
+                "description_work": description_work
+            }
+            id_count += 1
+
+        return JSONResponse(response, status_code=200)
+
+    except Exception as e:
+        return JSONResponse({"message": str(e)}, status_code=401)
+
+
+
+@app.post("/assign_worker")
+async def assing_worker(request:Request):
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
+    
+    try:
+        order_id = data.get("order_id")
+        worker_id = data.get("worker_id")
+
+        order = Orders.get_order_by_id(FILE_DB,order_id)
+        order.assign_worker(FILE_DB,worker_id," ")
+        order.update_status(FILE_DB,"В работе")
+    except Exception as e:
+        return JSONResponse({"message": str(e)}, status_code=401)
 
 
 
