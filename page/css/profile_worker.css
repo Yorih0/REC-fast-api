@@ -311,38 +311,95 @@
         padding: 20px;
     }
 }
+
+/* ===== MODAL ===== */
+
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 .modal-content {
-    background: #1f1f1f;
-    padding: 25px;
-    border-radius: 14px;
-    width: 320px;
+    background: linear-gradient(#2a2a2a, #1c1c1c);
+    padding: 26px;
+    border-radius: 18px;
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 25px 40px rgba(0,0,0,0.9);
+    animation: modalOpen 0.3s ease;
+}
+
+@keyframes modalOpen {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
 }
 
 .modal-content h3 {
-    margin-bottom: 15px;
+    text-align: center;
+    margin-bottom: 8px;
 }
 
-.modal-content select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 20px;
+.modal-content label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
 }
+
+/* ===== INPUTS ===== */
+
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    outline: none;
+    font-size: 14px;
+}
+
+.modal-content textarea { 
+    min-height: 90px; 
+    resize: none; 
+}
+
+.modal-content select:focus,
+.modal-content textarea:focus {
+    border-color: rgba(255,255,255,0.4);
+}
+
+/* ===== BUTTONS ===== */
 
 .modal-actions {
     display: flex;
     gap: 10px;
+    margin-top: 12px;
 }
 
-.modal .cancel {
-    background: #555;
+.modal-actions .services-btn {
+    flex: 1;
+    border-radius: 12px;
+    padding: 10px 0;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.modal-actions .services-btn:hover {
+    transform: translateY(-1px);
+}
+
+.modal-actions .cancel {
+    background: rgba(150,150,150,0.25);
+}
+
+.modal-actions .success {
+    background: rgba(150,150,150,0.25);
 }

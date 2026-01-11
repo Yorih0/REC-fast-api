@@ -186,12 +186,25 @@
                     
                     orderCard.appendChild(orderHeader);
 
+
                     // Информация об автомобиле
                     const carInfo = document.createElement("div");
                     carInfo.className = "order-section";
                     
                     const carTitle = document.createElement("div");
                     carTitle.className = "section-title";
+                    
+                    //пол
+                    const phone = document.createElement("div");
+                    phone.className = "order-phone";
+                    phone.textContent = order.phone;
+                    carInfo.appendChild(phone);
+
+                    const email = document.createElement("div");
+                    email.className = "order-email";
+                    email.textContent = order.email;
+                    carInfo.appendChild(email);
+                    //
                     carTitle.textContent = "🚗 Автомобиль";
                     carInfo.appendChild(carTitle);
                     
@@ -267,7 +280,7 @@
                         cancelBtn.className = "services-btn order-cancel-btn";
                         cancelBtn.textContent = "Отменить заказ";
                         cancelBtn.type = "button";
-                        cancelBtn.onclick = function() { cancelOrder(order.id); };
+                        cancelBtn.onclick = function() { event.stopPropagation(); cancelOrder(order.id); };
                         orderCard.appendChild(cancelBtn);
                     }
 
@@ -281,11 +294,7 @@
             }
         }
 
-        async function assignWorker(orderId) 
-        {
 
-            showToast("Функция назначения мастера будет реализована позже", "info");
-        }
         async function cancelOrder(orderId) 
         {
             const formData = {
@@ -327,7 +336,8 @@
     <script>
         let currentOrderId = null;
 
-        function openAssignModal(orderId) {
+        function openAssignModal(orderId) 
+        {
             currentOrderId = orderId;
             document.getElementById("workerModal").style.display = "flex";
             loadWorkers();

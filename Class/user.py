@@ -176,7 +176,7 @@ class User:
     # ----------------- Поиск по атрибуту -----------------
     @staticmethod
     def Find_user_by_atr(attribute, value, file_db):
-        if attribute not in ("hashkey", "login", "mail", "phone"):
+        if attribute not in ("hashkey", "login", "mail", "phone","id"):
             return None
         con = sqlite3.connect(file_db)
         cursor = con.cursor()

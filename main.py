@@ -88,7 +88,7 @@ async def login(request: Request):
         else:
             return JSONResponse({
                     "status": "success",
-                    "message": "Вход успешна",
+                    "message": "Вход",
                     "hashkey": user.hashkey
                 }, status_code=200)
     except ValueError as e:
@@ -126,7 +126,7 @@ async def Register_user(request: Request):
             else: 
                 return JSONResponse({
                         "status": "success",
-                        "message": "Регистрация успешна",
+                        "message": "Регистрация",
                         "hashkey": user.hashkey
                     }, status_code=200)
         except ValueError as e:
@@ -242,8 +242,15 @@ async def del_order(request : Request):
         if(order.status == "Обработка"):
             Orders.delete_order(order,FILE_DB)
             return JSONResponse({"message":"Вы успехно удалили заказ"},status_code=200)
+        if(user.role !="Admin"):
+            if(order.status == "Обработка"):
+                Orders.delete_order(order,FILE_DB)
+                return JSONResponse({"message":"Вы успехно удалили заказ"},status_code=200)
+            return JSONResponse({"message":"Заказ уже был принят и его нельзя удалить"})
+        else:
+            Orders.delete_order(order,FILE_DB)
+            return JSONResponse({"message":"Вы успехно удалили заказ"},status_code=200)
             
-        return JSONResponse({"message":"Заказ уже был принят и его нельзя удалить"})
     except ValueError as e:
         return JSONResponse({"message" : str(e)},status_code=401)
     
@@ -352,7 +359,10 @@ async def load_profile(request:Request):
                 description_work = "Ничего не делали"
             else:
                 description_work = ord.description_work
+            user = User.Find_user_by_atr("id",ord.user_id,FILE_DB)
             response["orders"][f"order-{id_count}"] = {
+                "phone":user.phone,
+                "email":user.mail,
                 "id" : ord.id,
                 "brand" : ord.brand,
                 "model" : ord.model,
@@ -370,7 +380,23 @@ async def load_profile(request:Request):
             return JSONResponse({"message": str(e)}, status_code=401)
     except Exception as e:
         return JSONResponse({"message": str(e)}, status_code=401)
+    
+@app.post("/assign_worker")
+async def assing_worker(request:Request):
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
+    
+    try:
+        order_id = data.get("order_id")
+        worker_id = data.get("worker_id")
 
+        order = Orders.get_order_by_id(FILE_DB,order_id)
+        order.assign_worker(FILE_DB,worker_id," ")
+        order.update_status(FILE_DB,"В работе")
+    except Exception as e:
+        return JSONResponse({"message": str(e)}, status_code=401)
 
 
 @app.post("/load_profile_worker")
@@ -411,7 +437,7 @@ async def load_profile_worker(request: Request):
                 "description_work": description_work
             }
             id_count += 1
-
+            print(response)
         return JSONResponse(response, status_code=200)
 
     except Exception as e:
@@ -419,22 +445,7 @@ async def load_profile_worker(request: Request):
 
 
 
-@app.post("/assign_worker")
-async def assing_worker(request:Request):
-    try:
-        data = await request.json()
-    except Exception:
-        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
-    
-    try:
-        order_id = data.get("order_id")
-        worker_id = data.get("worker_id")
 
-        order = Orders.get_order_by_id(FILE_DB,order_id)
-        order.assign_worker(FILE_DB,worker_id," ")
-        order.update_status(FILE_DB,"В работе")
-    except Exception as e:
-        return JSONResponse({"message": str(e)}, status_code=401)
 
 
 
