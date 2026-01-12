@@ -81,9 +81,9 @@
 
 
     <div class="modal-actions">
-      <button class="services-btn cancel" onclick="closeModal()">Назад</button>
+      <button class="services-btn" onclick="closeModal()">Назад</button>
       <button class="services-btn" onclick="saveChanges()">Сохранить</button>
-      <button class="services-btn success" onclick="finishOrder()">Выполнить</button>
+      <button class="services-btn" onclick="finishOrder()">Выполнить</button>
     </div>
 
   </div>
@@ -300,17 +300,20 @@ async function saveChanges(){
 }
 
 async function finishOrder(){
-  // const res = await fetch("/finish_order",{
-  //   method:"POST",
-  //   headers:{"Content-Type":"application/json"},
-  //   body:JSON.stringify({order_id:currentOrderId})
-  // });
+  const status = document.getElementById("statusSelect").value;
+  const desc = document.getElementById("workDescription").value;
 
-  // if(res.ok){
-  //   showToast("Заказ выполнен","success");
-  //   closeModal();
-  //   location.reload();
-  // } else showToast("Ошибка","error");
+  const response = await fetch("/finish_order",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({order_id:currentOrderId,status,description_work:desc})
+  });
+  const result = await response.json();
+  if(response.ok){
+    showToast(result.message,"success");
+    closeModal();
+    load_work();
+  } else showToast(result.message ,"error");
 }
 </script>
 

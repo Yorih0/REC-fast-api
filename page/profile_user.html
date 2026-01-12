@@ -1,3 +1,4 @@
+<!-- profile_user.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -17,6 +18,7 @@
             <div class="logo" onclick="Back()"><div class="shine">ReCharge</div></div>
             <nav class="nav">
                 <button class="services-btn" onclick="Exit()">Выйти</button>
+                 <button class="services-btn" onclick="createOrder()">Создать заказ</button>
             </nav>
         </header>
 
@@ -299,6 +301,9 @@
                 showToast("Ошибка сети", "error");
             }
             return false;
+        }
+        function createOrder() {
+            window.location.href = "/order";
         }
     </script>
 </body>

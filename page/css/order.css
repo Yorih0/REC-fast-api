@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,7 +17,12 @@ html, body {
 body {
   display: block;
 }
-
+.logo
+{
+  position: relative;
+  right: 440%;
+  bottom: 50%;
+}
 .hero {
   flex: 1;
   display: flex;
@@ -24,10 +31,6 @@ body {
   padding: 24px 32px 32px;
   background: #000000;
 }
-
-/* Header styles now use .header from main.css */
-
-/* Logo and shine styles now use from main.css */
 
 .user-pill {
   border: 3px solid #fff;

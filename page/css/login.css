@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -13,83 +13,6 @@ body {
   background-color: #000000;
 }
 
-header.header {
-  padding: 25px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-  position: relative;
-  width: 100%;
-  background-color: #000000;
-}
-
-.logo {
-  font-size: 30px;
-  font-weight: 700;
-  color: #ffffff;
-  position: relative;
-  z-index: 999;
-}
-
-.shine {
-  font-size: 1em;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.697);
-  background: #222 -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      from(#222),
-      to(#222),
-      color-stop(0.5, #fff)
-    ) 0 0 no-repeat;
-  background-image: -webkit-linear-gradient(
-    -40deg,
-    transparent 0%,
-    transparent 40%,
-    #fff 50%,
-    transparent 60%,
-    transparent 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-background-size: 50px;
-  background-size: 50px;
-  -webkit-animation: zezzz;
-  animation: zezzz;
-  -webkit-animation-duration: 8s;
-  animation-duration: 7s;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-}
-
-@-webkit-keyframes zezzz {
-  0% {
-    background-position: -200px;
-  }
-  20% {
-    background-position: 200px;
-  }
-  100% {
-    background-position: 200px;
-  }
-}
-
-@keyframes zezzz {
-  0% {
-    background-position: -200px;
-  }
-  20% {
-    background-position: 200px;
-  }
-  100% {
-    background-position: 200px;
-  }
-}
-
 .wrapper {
   position: relative;
   width: 100%;
@@ -99,9 +22,6 @@ header.header {
   justify-content: center;
   margin-top: -160px;   /* регулируй высоту поднятия формы */
 }
-
-
-
 
 .gradient-box {
   width: clamp(280px, 90vw, 400px);

@@ -394,7 +394,8 @@ async def assing_worker(request:Request):
 
         order = Orders.get_order_by_id(FILE_DB,order_id)
         order.assign_worker(FILE_DB,worker_id," ")
-        order.update_status(FILE_DB,"В работе")
+        order.status = "В работе"
+        order.update_order(FILE_DB)
     except Exception as e:
         return JSONResponse({"message": str(e)}, status_code=401)
 
@@ -450,20 +451,33 @@ async def update_order(request:Request):
         return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
     
     try:
-        print(data)
-        # print(data.order_id)
         order = Orders.get_order_by_id(FILE_DB,data.get("order_id"))
-        print(order.description_work)
-        print(data.get("description_work"))
         order.description_work = data.get("description_work")
-        print(order.description_work)
+        order.status = data.get("status")
         order.update_order(FILE_DB)
-        # order.
-        return JSONResponse({"message":"хихии ха"}, status_code = 200)
+
+        return JSONResponse({"message":"Изменения сохранены"}, status_code = 200)
+    
     except Exception as e:
         return JSONResponse({"message":str(e)}, status_code = 400)
 
+@app.post("/finish_order")
+async def finish_order(request:Request):
+    try:
+        data = await request.json()
+    except:
+        return JSONResponse({"message":"Пустое тело запроса"}, status_code=400)
+    
+    try:
+        order = Orders.get_order_by_id(data.get("order_id"))
+        order = Orders.get_order_by_id(FILE_DB,data.get("order_id"))
+        order.description_work = data.get("description_work")
+        order.status = "Выполнено"
+        order.update_order(FILE_DB)
 
+        return JSONResponse({"message":"Заказ выполнен"}, status_code = 200)
+    except Exception as e:
+        return JSONResponse({"message":str(e)},status_code=400)
 
 
 if __name__ == "__main__":
