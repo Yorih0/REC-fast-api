@@ -5,17 +5,108 @@ class Order:
     def __init__(self, id=None, user_id=None, brand=None, model=None, license_plate=None,
                  region=None, description_problem=None, status=None, created_at=None,
                  worker_id=None, description_work=None):
-        self.id = id
-        self.user_id = user_id
-        self.brand = brand
-        self.model = model
-        self.license_plate = license_plate
-        self.region = region
-        self.description_problem = description_problem
-        self.status = status
-        self.created_at = created_at
-        self.worker_id = worker_id
-        self.description_work = description_work
+
+        self._id = id
+        self._user_id = user_id
+        self._brand = brand
+        self._model = model
+        self._license_plate = license_plate
+        self._region = region
+        self._description_problem = description_problem
+        self._status = status
+        self._created_at = created_at
+        self._worker_id = worker_id
+        self._description_work = description_work
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def user_id(self):
+        return self._user_id
+
+    @property
+    def brand(self):
+        return self._brand
+
+    @property
+    def model(self):
+        return self._model
+
+    @property
+    def license_plate(self):
+        return self._license_plate
+
+    @property
+    def region(self):
+        return self._region
+
+    @property
+    def description_problem(self):
+        return self._description_problem
+
+    @property
+    def status(self):
+        return self._status
+
+    @property
+    def created_at(self):
+        return self._created_at
+
+    @property
+    def worker_id(self):
+        return self._worker_id
+
+    @property
+    def description_work(self):
+        return self._description_work
+
+    @id.setter
+    def id(self, value):
+        self._id = value
+
+    @user_id.setter
+    def user_id(self, value):
+        self._user_id = value
+
+    @brand.setter
+    def brand(self, value):
+        self._brand = value
+
+    @model.setter
+    def model(self, value):
+        self._model = value
+
+    @license_plate.setter
+    def license_plate(self, value):
+        self._license_plate = value
+
+    @region.setter
+    def region(self, value):
+        self._region = value
+
+    @description_problem.setter
+    def description_problem(self, value):
+        self._description_problem = value
+
+    @status.setter
+    def status(self, value):
+        self._status = value
+
+    @created_at.setter
+    def created_at(self, value):
+        self._created_at = value
+
+    @worker_id.setter
+    def worker_id(self, value):
+        self._worker_id = value
+
+    @description_work.setter
+    def description_work(self, value):
+        self._description_work = value
+
+
 
     # ====== Создание нового заказа ======
     def create_order(self, file_db):
@@ -99,21 +190,42 @@ class Order:
         finally: con.close()
 
     # ====== Обновление статуса заказа ======
-    def update_status(self, file_db, new_status):
+    def update_order(self, file_db):
         if not self.id:
             return {"status": "error", "message": "ID заказа не задан"}
+
+        query = """
+            UPDATE Orders
+            SET
+                status = ?,
+                description_work = ?,
+                worker_id = ?
+            WHERE id = ?
+        """
+
+        values = (
+            self.status,
+            self.description_work,
+            self.worker_id,
+            self.id
+        )
+
         con = sqlite3.connect(file_db)
         cursor = con.cursor()
+
         try:
-            cursor.execute("UPDATE Orders SET status = ? WHERE id = ?", (new_status, self.id))
+            cursor.execute(query, values)
             con.commit()
-            self.status = new_status
-            return {"status": "success", "message": "Статус обновлён"}
+            return {"status": "success", "message": "Заказ обновлён"}
+
         except sqlite3.Error as e:
             con.rollback()
             return {"status": "error", "message": f"Ошибка базы данных: {e}"}
+
         finally:
             con.close()
+
+
 
     # ====== Назначение работника и описание работы ======
     def assign_worker(self, file_db, worker_id, description_work):

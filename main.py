@@ -437,14 +437,31 @@ async def load_profile_worker(request: Request):
                 "description_work": description_work
             }
             id_count += 1
-            print(response)
         return JSONResponse(response, status_code=200)
 
     except Exception as e:
         return JSONResponse({"message": str(e)}, status_code=401)
 
-
-
+@app.post("/update_order")
+async def update_order(request:Request):
+    try:
+        data = await request.json()
+    except:
+        return JSONResponse({"message": "Пустое тело запроса"}, status_code=400)
+    
+    try:
+        print(data)
+        # print(data.order_id)
+        order = Orders.get_order_by_id(FILE_DB,data.get("order_id"))
+        print(order.description_work)
+        print(data.get("description_work"))
+        order.description_work = data.get("description_work")
+        print(order.description_work)
+        order.update_order(FILE_DB)
+        # order.
+        return JSONResponse({"message":"хихии ха"}, status_code = 200)
+    except Exception as e:
+        return JSONResponse({"message":str(e)}, status_code = 400)
 
 
 

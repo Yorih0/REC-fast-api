@@ -103,14 +103,13 @@ function Exit(){
 }
 
 let currentOrderId = null;
-
-document.addEventListener("DOMContentLoaded", async () => {
+load_work();
+async function load_work(){
   if(!formData.hashkey){
     showToast("Не авторизован","error");
     location.href="/";
     return;
   }
-
   const res = await fetch("/load_profile_worker",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -126,8 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   } else {
     document.getElementById("no-orders").style.display="block";
   }
-});
-
+}
 function getStatusColor(status) {
     const statusColors = {
         'Обработка': '#ffa500',
@@ -288,31 +286,31 @@ async function saveChanges(){
   const status = document.getElementById("statusSelect").value;
   const desc = document.getElementById("workDescription").value;
 
-  const res = await fetch("/update_order",{
+  const response = await fetch("/update_order",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({order_id:currentOrderId,status,description_work:desc})
   });
-
-  if(res.ok){
-    showToast("Сохранено","success");
+  const result = await response.json();
+  if(response.ok){
+    showToast(result.message,"success");
     closeModal();
-    location.reload();
-  } else showToast("Ошибка","error");
+    load_work();
+  } else showToast(result.message ,"error");
 }
 
 async function finishOrder(){
-  const res = await fetch("/finish_order",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({order_id:currentOrderId})
-  });
+  // const res = await fetch("/finish_order",{
+  //   method:"POST",
+  //   headers:{"Content-Type":"application/json"},
+  //   body:JSON.stringify({order_id:currentOrderId})
+  // });
 
-  if(res.ok){
-    showToast("Заказ выполнен","success");
-    closeModal();
-    location.reload();
-  } else showToast("Ошибка","error");
+  // if(res.ok){
+  //   showToast("Заказ выполнен","success");
+  //   closeModal();
+  //   location.reload();
+  // } else showToast("Ошибка","error");
 }
 </script>
 
